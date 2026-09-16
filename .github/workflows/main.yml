@@ -1,4 +1,4 @@
-name: Build ForgeKit APK
+name: Créer un APK ForgeKit
 
 on:
   workflow_dispatch:
@@ -14,10 +14,13 @@ jobs:
       - name: Installer Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Installer les dépendances
         run: npm install
+
+      - name: Ajouter la plateforme Android
+        run: npx cap add android
 
       - name: Synchroniser Android
         run: npx cap sync android
