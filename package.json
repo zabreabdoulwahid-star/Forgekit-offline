@@ -1,0 +1,19 @@
+{
+  "name": "forgekit",
+  "version": "2.0.0",
+  "description": "ForgeKit Offline \u2014 Figma-inspired offline design toolkit for Android 5.1+",
+  "private": true,
+  "scripts": {
+    "sync": "npx cap sync android",
+    "open": "npx cap open android",
+    "build-apk-debug": "cd android && ./gradlew assembleDebug",
+    "build-apk-release": "cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/core": "^2.4.9",
+    "@capacitor/android": "^2.4.9"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^2.4.9"
+  }
+}

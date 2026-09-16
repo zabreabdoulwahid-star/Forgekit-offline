@@ -1,0 +1,10 @@
+{
+  "appId": "com.forgekit.app",
+  "appName": "ForgeKit Offline",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "backgroundColor": "#0b0d11",
+  "android": {
+    "allowMixedContent": false
+  }
+}

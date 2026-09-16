@@ -1,0 +1,60 @@
+name: Build ForgeKit APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Setup Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Generate Android project
+        run: npx cap add android
+
+      - name: Ensure Android minimum SDK is 21
+        shell: bash
+        run: |
+          if [ -f android/variables.gradle ]; then
+            sed -i 's/minSdkVersion = [0-9][0-9]*/minSdkVersion = 21/' android/variables.gradle
+          fi
+          if [ -f android/app/build.gradle ]; then
+            sed -i 's/minSdkVersion [0-9][0-9]*/minSdkVersion 21/' android/app/build.gradle || true
+          fi
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Rename APK
+        shell: bash
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk ForgeKit-Offline-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ForgeKit-Offline-APK
+          path: ForgeKit-Offline-debug.apk
+          if-no-files-found: error

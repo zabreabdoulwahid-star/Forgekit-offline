@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<title>ForgeKit</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">F</div>
+      <div class="brand-text">
+        <h1>ForgeKit</h1>
+        <p>Offline icon, type &amp; color toolkit</p>
+      </div>
+    </div>
+    <div class="topbar-tag">100% offline</div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="hero-card"><div><div class="eyebrow">OFFLINE DESIGN LAB</div><div class="hero-title">Create. Explore. Export.</div><div class="hero-sub">A fast design toolkit made for tablets — no account, no cloud, no internet required.</div></div><div class="hero-mark">F</div></div>
+      <div class="metric-grid"><button class="metric" onclick="switchTab('icons')"><b>520+</b><span>Local icons</span></button><button class="metric" onclick="switchTab('fonts')"><b>300</b><span>Type presets</span></button><button class="metric" onclick="switchTab('colors')"><b>5</b><span>Color harmonies</span></button><button class="metric" onclick="switchTab('gradients')"><b>4</b><span>Gradient stops</span></button></div>
+      <div class="section-grid"><button class="feature-card" onclick="switchTab('icons')"><span class="feature-icon">⌘</span><span><b>Icon Library</b><small>Search, preview and copy HTML/CSS.</small></span></button><button class="feature-card" onclick="switchTab('fonts')"><span class="feature-icon">Aa</span><span><b>Typography Studio</b><small>Live type preview, weights and tracking.</small></span></button><button class="feature-card" onclick="switchTab('colors')"><span class="feature-icon">◉</span><span><b>Color Studio</b><small>Generate five harmony families and check contrast.</small></span></button><button class="feature-card" onclick="switchTab('logo')"><span class="feature-icon">◇</span><span><b>Logo Canvas</b><small>Combine icon + type + color and export.</small></span></button></div>
+      <div class="offline-note"><b>✓ Works offline</b><span>Your favorites and settings stay on this device.</span></div>
+    </div>
+
+    <!-- ICONS -->
+    <div class="panel" id="panel-icons">
+      <div class="sec-title">Icon Library</div>
+      <p class="sec-sub">520+ local vector icons. Search, filter, tap for code.</p>
+      <div class="searchbar">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+        <input type="text" placeholder="Search icons or tags…" oninput="setIconQuery(this.value)"/>
+      </div>
+      <div class="chiprow" id="iconChips"></div>
+      <div class="icon-grid" id="iconGrid"></div>
+    </div>
+
+    <!-- FONTS -->
+    <div class="panel" id="panel-fonts">
+      <div class="sec-title">Typography Studio</div>
+      <p class="sec-sub">300 local type presets, live preview, pairing tips.</p>
+
+      <div class="type-controls">
+        <textarea id="fontTextInput" rows="2" oninput="setFontText(this.value)">Design something bold.</textarea>
+        <div class="slider-row">
+          <div class="slider-label"><span>Weight override</span><b id="weightVal">auto</b></div>
+          <input type="range" min="100" max="900" step="100" value="400" oninput="setFontWeightOverride(this.value)"/>
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Letter-spacing override</span><b id="lsVal">auto</b></div>
+          <input type="range" min="-2" max="8" step="0.5" value="0" oninput="setFontLsOverride(this.value)"/>
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+        <input type="text" placeholder="Search fonts…" oninput="setFontQuery(this.value)"/>
+      </div>
+      <div class="chiprow" id="fontChips"></div>
+      <div id="fontList"></div>
+    </div>
+
+    <!-- COLORS -->
+    <div class="panel" id="panel-colors">
+      <div class="sec-title">Color Matching Studio</div>
+      <p class="sec-sub">Pick a color, get five harmony palettes instantly.</p>
+
+      <div class="wheel-wrap">
+        <canvas id="colorWheel" width="220" height="220"></canvas>
+        <div class="wheel-thumb" id="wheelThumb"></div>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Lightness</span><b id="lightVal">58%</b></div>
+        <input type="range" id="lightSlider" min="10" max="90" value="58" oninput="setBaseLightness(this.value)"/>
+      </div>
+
+      <div class="current-color-bar">
+        <div class="current-swatch" id="currentSwatch"></div>
+        <div class="current-color-vals">
+          <div class="hex" id="currentHex">#FF8A3D</div>
+          <div class="rgbhsl" id="currentRgbHsl"></div>
+        </div>
+        <input class="hexinput" id="hexInput" type="text" value="#FF8A3D" onchange="setHexDirect(this.value)"/>
+      </div>
+
+      <div id="paletteWrap"></div>
+
+      <div class="mockup-wrap">
+        <div class="sec-title" style="font-size:14.5px;margin-bottom:8px;">Logo mockup preview</div>
+        <div class="mockup-box" id="mockupBox">
+          <div class="mlogo" id="mockupLogo">F</div>
+          <div class="mtitle">Your Brand</div>
+          <div class="msub">brand tagline goes here</div>
+        </div>
+      </div>
+
+      <div class="mockup-wrap">
+        <div class="sec-title" style="font-size:14.5px;margin-bottom:8px;">Contrast checker (WCAG)</div>
+        <div id="contrastWrap"></div>
+      </div>
+    </div>
+
+    <!-- GRADIENTS -->
+    <div class="panel" id="panel-gradients">
+      <div class="sec-title">Gradient Generator</div>
+      <p class="sec-sub">Stack up to 4 stops, tune the angle, copy the CSS.</p>
+
+      <div class="gradient-preview" id="gradPreview"></div>
+
+      <div class="seg" id="gradTypeSeg" style="margin-bottom:12px;">
+        <button data-t="linear" class="active" onclick="setGradType('linear')">Linear</button>
+        <button data-t="radial" onclick="setGradType('radial')">Radial</button>
+      </div>
+
+      <div class="slider-row" id="gradAngleRow">
+        <div class="slider-label"><span>Angle</span><b id="angleVal">135°</b></div>
+        <input type="range" min="0" max="360" value="135" oninput="setGradAngle(this.value)"/>
+      </div>
+
+      <div id="stopWrap"></div>
+      <button class="btn" style="margin-bottom:14px;" onclick="addStop()">+ Add color stop</button>
+
+      <div class="codeblock">
+        <div class="label">CSS</div>
+        <pre id="gradCssOut"></pre>
+        <button class="copybtn" onclick="copyCodeBlock('gradCssOut', this)"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M5 15H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"/></svg>Copy</button>
+      </div>
+
+      <div class="sec-title" style="font-size:14.5px;">Presets</div>
+      <div class="preset-grid" id="presetGrid"></div>
+    </div>
+
+    <!-- LOGO -->
+    <div class="panel" id="panel-logo">
+      <div class="sec-title">Logo Canvas</div>
+      <p class="sec-sub">Combine an icon, a typeface and a color — export it.</p>
+
+      <div class="logo-stage" id="logoStage"></div>
+
+      <div class="field-group">
+        <label class="fl">Wordmark text</label>
+        <input type="text" value="Forge" oninput="setLogoText(this.value)"/>
+      </div>
+
+      <div class="field-group">
+        <label class="fl">Layout</label>
+        <div class="seg" id="logoLayoutSeg">
+          <button data-l="left" class="active" onclick="setLogoLayout('left')">Icon+Text</button>
+          <button data-l="top" onclick="setLogoLayout('top')">Stacked</button>
+          <button data-l="icon" onclick="setLogoLayout('icon')">Icon only</button>
+          <button data-l="text" onclick="setLogoLayout('text')">Text only</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="fl">Typeface</label>
+        <select id="logoFontSelect" class="hexinput" style="width:100%;text-align:left;" onchange="setLogoFont(this.value)"></select>
+      </div>
+
+      <div class="field-group">
+        <label class="fl">Icon (favorite icons show first)</label>
+        <div class="mini-icon-picker" id="logoIconPicker"></div>
+      </div>
+
+      <div class="field-group">
+        <label class="fl">Color</label>
+        <div class="mini-color-picker" id="logoColorPicker"></div>
+      </div>
+
+      <div class="field-group">
+        <label class="fl">Background</label>
+        <div class="mini-color-picker" id="logoBgPicker"></div>
+      </div>
+
+      <div class="rowbtns" style="margin-bottom:12px;">
+        <button class="btn primary" onclick="exportLogoPng()">Export PNG</button>
+        <button class="btn" onclick="exportLogoSvg()">Export SVG</button>
+      </div>
+
+      <div class="codeblock">
+        <div class="label">HTML</div>
+        <pre id="logoHtmlOut"></pre>
+        <button class="copybtn" onclick="copyCodeBlock('logoHtmlOut', this)"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M5 15H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"/></svg>Copy</button>
+      </div>
+      <div class="codeblock">
+        <div class="label">CSS</div>
+        <pre id="logoCssOut"></pre>
+        <button class="copybtn" onclick="copyCodeBlock('logoCssOut', this)"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M5 15H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"/></svg>Copy</button>
+      </div>
+    </div>
+
+    <!-- FAVORITES -->
+    <div class="panel" id="panel-favorites">
+      <div class="sec-title">Favorites</div>
+      <p class="sec-sub">Everything you've starred, saved locally on this device.</p>
+      <div id="favWrap"></div>
+    </div>
+
+  </div>
+
+  <div class="bottomnav">
+    <button class="navbtn" id="nav-dashboard" onclick="switchTab('dashboard')"><span class="nav-glyph">⌂</span><span>Home</span></button>
+    <button class="navbtn" id="nav-icons" onclick="switchTab('icons')"><span class="nav-glyph">⌘</span><span>Icons</span></button>
+    <button class="navbtn" id="nav-fonts" onclick="switchTab('fonts')"><span class="nav-glyph">Aa</span><span>Type</span></button>
+    <button class="navbtn" id="nav-colors" onclick="switchTab('colors')"><span class="nav-glyph">◉</span><span>Color</span></button>
+    <button class="navbtn" id="nav-gradients" onclick="switchTab('gradients')"><span class="nav-glyph">▧</span><span>Gradient</span></button>
+    <button class="navbtn" id="nav-logo" onclick="switchTab('logo')"><span class="nav-glyph">◇</span><span>Logo</span></button>
+    <button class="navbtn" id="nav-favorites" onclick="switchTab('favorites')"><span class="nav-glyph">☆</span><span>Saved</span></button>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Icon detail sheet -->
+  <div class="sheet" id="iconSheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="hideSheets()"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+    <div class="sheet-hero">
+      <div class="sheet-hero-icon" id="sheetIconPreview"></div>
+      <div>
+        <h3 id="sheetIconTitle">Icon</h3>
+        <p id="sheetIconSub"></p>
+      </div>
+    </div>
+    <div class="codeblock">
+      <div class="label">HTML</div>
+      <pre id="sheetIconHtml"></pre>
+      <button class="copybtn" onclick="copyCodeBlock('sheetIconHtml', this)"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M5 15H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"/></svg>Copy</button>
+    </div>
+    <div class="codeblock">
+      <div class="label">CSS</div>
+      <pre id="sheetIconCss"></pre>
+      <button class="copybtn" onclick="copyCodeBlock('sheetIconCss', this)"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M5 15H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1"/></svg>Copy</button>
+    </div>
+    <div class="rowbtns">
+      <button class="btn fav" id="sheetIconFav" onclick="toggleIconFavFromSheet()"></button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+</div>
+
+<script src="icons.js"></script>
+<script src="fonts.js"></script>
+<script src="app.js"></script>
+<script>
+function copyCodeBlock(id, btn) {
+  var text = document.getElementById(id).textContent;
+  var ok = copyText(text);
+  if (ok) {
+    var orig = btn.innerHTML;
+    btn.className = 'copybtn copied';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><polyline points="5,13 10,18 19,7"/></svg>Copied';
+    setTimeout(function () { btn.className = 'copybtn'; btn.innerHTML = orig; }, 1400);
+  }
+}
+</script>
+</body>
+</html>
